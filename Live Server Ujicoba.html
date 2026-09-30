@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investing Academy - TradingView Live</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- TradingView Script -->
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+    
+    <style>
+        .nav-active {
+            background-color: #1e40af; 
+            border-left: 4px solid #3b82f6; 
+        }
+        .page-section {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        .page-section.active-page {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+    
+    <script>
+        tailwind.config = {
+            theme: { extend: { colors: { brand: '#1E3A8A', accent: '#10B981' } } }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 flex h-screen overflow-hidden text-gray-800">
+
+    <!-- Sidebar (Navigasi) -->
+    <aside class="w-64 bg-brand text-white flex flex-col z-10 shadow-lg shrink-0">
+        <div class="h-20 flex items-center justify-center border-b border-blue-800 cursor-pointer" onclick="navigateTo('page-dashboard', 'Dashboard', this)">
+            <h1 class="text-xl font-bold tracking-wider"><i class="fa-solid fa-chart-line mr-2"></i> Investing Academy</h1>
+        </div>
+        <nav class="flex-1 px-4 py-6 space-y-2">
+            <button onclick="navigateTo('page-dashboard', 'Dashboard Utama', this)" class="nav-btn nav-active w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-left hover:bg-blue-800">
+                <i class="fa-solid fa-house w-5"></i> Dashboard
+            </button>
+            <button onclick="navigateTo('page-lms', 'Belajar dari Nol (LMS)', this)" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-left hover:bg-blue-800">
+                <i class="fa-solid fa-book w-5"></i> Belajar dari Nol
+            </button>
+            <button onclick="navigateTo('page-simulasi', 'Simulasi Saham Live', this)" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-left hover:bg-blue-800">
+                <i class="fa-solid fa-satellite-dish w-5 text-red-400 animate-pulse"></i> Live Market (IDX)
+            </button>
+            <button onclick="navigateTo('page-komunitas', 'Komunitas & Mentor', this)" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-left hover:bg-blue-800">
+                <i class="fa-solid fa-users w-5"></i> Komunitas & Mentor
+            </button>
+            <button onclick="navigateTo('page-pencapaian', 'Pencapaian Saya', this)" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-left hover:bg-blue-800">
+                <i class="fa-solid fa-medal w-5"></i> Pencapaian
+            </button>
+        </nav>
+        <div class="p-4 border-t border-blue-800 text-sm flex justify-between items-center">
+            <span class="text-blue-200">&copy; 2026 Tim BIC</span>
+            <button onclick="navigateTo('page-profil', 'Pengaturan Akun', document.getElementById('btn-profil'))" class="text-white hover:text-blue-300 p-2 rounded-full hover:bg-blue-800 transition">
+                <i class="fa-solid fa-gear"></i>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 flex flex-col overflow-y-auto">
+        <!-- Header Global -->
+        <header class="h-20 bg-white shadow-sm flex items-center justify-between px-8 z-0 shrink-0">
+            <h2 id="header-title" class="text-2xl font-semibold text-gray-700">Dashboard Utama 👋</h2>
+            <div class="flex items-center gap-6">
+                <!-- Tombol Profil -->
+                <button id="btn-profil" onclick="navigateTo('page-profil', 'Profil Pengguna', this)" class="flex items-center gap-3 text-left hover:bg-gray-50 p-2 rounded-lg transition border border-transparent hover:border-gray-200">
+                    <div class="text-right hidden sm:block">
+                        <p class="text-sm font-bold text-gray-700">Budi Santoso</p>
+                        <p class="text-xs text-gray-500">Mahasiswa - Level 2</p>
+                    </div>
+                    <div class="w-10 h-10 bg-brand text-white rounded-full flex items-center justify-center font-bold">BS</div>
+                </button>
+            </div>
+        </header>
+
+        <!-- KUMPULAN HALAMAN (PAGES) -->
+        <div class="p-8 relative">
+
+            <!-- ================= HALAMAN 1: DASHBOARD ================= -->
+            <section id="page-dashboard" class="page-section active-page">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 lg:col-span-2">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-bold text-gray-800"><i class="fa-solid fa-robot text-brand mr-2"></i> Rekomendasi AI Untukmu</h3>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-4">AI menyarankan modul fundamental berdasarkan tingkat risiko Anda hari ini.</p>
+                        <button onclick="navigateTo('page-lms', 'Belajar dari Nol (LMS)', document.querySelector('.fa-book').parentElement)" class="w-full text-left flex items-center p-4 border rounded-lg hover:border-brand transition bg-white group">
+                            <div class="w-12 h-12 bg-blue-50 text-brand rounded-lg flex items-center justify-center text-xl mr-4 group-hover:bg-brand group-hover:text-white transition">
+                                <i class="fa-solid fa-file-invoice-dollar"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-bold text-gray-800">Cara Baca Laporan Keuangan Q1</h4>
+                                <p class="text-xs text-gray-500">Materi Berjenjang • 15 Menit</p>
+                            </div>
+                            <span class="bg-brand text-white px-4 py-2 rounded-lg text-sm font-semibold">Buka Modul <i class="fa-solid fa-arrow-right"></i></span>
+                        </button>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 text-center">
+                        <h3 class="text-lg font-bold text-gray-800 mb-4"><i class="fa-solid fa-chart-pie text-brand mr-2"></i> Progres Modul</h3>
+                        <div class="text-4xl font-extrabold text-brand my-6">65%</div>
+                        <button onclick="navigateTo('page-pencapaian', 'Pencapaian Saya', document.querySelector('.fa-medal').parentElement)" class="w-full bg-blue-50 text-brand font-bold py-3 rounded-lg hover:bg-blue-100 border border-blue-200">
+                            Lihat Rapor
+                        </button>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 lg:col-span-3 flex justify-between items-center bg-gradient-to-r from-brand to-blue-700 text-white">
+                        <div>
+                            <h3 class="text-xl font-bold mb-2"><i class="fa-solid fa-tower-cell mr-2 text-accent animate-pulse"></i> TradingView Server Terhubung</h3>
+                            <p class="text-blue-100">Koneksi ke IHSG Berhasil. Saldo Virtual Anda: <b>Rp 100.000.000</b>.</p>
+                        </div>
+                        <button onclick="navigateTo('page-simulasi', 'Simulasi Saham Live', document.querySelector('.fa-satellite-dish').parentElement)" class="bg-accent text-white px-6 py-3 rounded-xl font-bold hover:bg-green-600 shadow-lg">
+                            Masuk Mode Trading <i class="fa-solid fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= HALAMAN 2: LMS ================= -->
+            <section id="page-lms" class="page-section">
+                <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-100">
+                    <h2 class="text-2xl font-bold text-brand mb-2">Kurikulum Saham Pemula</h2>
+                    <p class="text-gray-600 mb-6">Materi disusun berjenjang agar kamu tidak loncat-loncat cari sumber belajar.</p>
+                    
+                    <div class="space-y-4">
+                        <div class="p-5 border border-blue-200 bg-blue-50 rounded-lg flex justify-between items-center">
+                            <div>
+                                <span class="text-xs font-bold text-brand bg-blue-100 px-2 py-1 rounded">SEDANG DIPELAJARI (65%)</span>
+                                <h4 class="font-bold text-lg mt-2">Bab 2: Cara Baca Laporan Keuangan</h4>
+                            </div>
+                            <button class="px-4 py-2 bg-brand text-white rounded-lg font-bold shadow-md">Lanjut Belajar</button>
+                        </div>
+                    </div>
+
+                    <!-- WADAH FIREBASE DARI ADMIN -->
+                    <div id="dynamic-lms-container" class="mt-8 border-t-2 border-dashed border-gray-200 pt-6"></div>
+                </div>
+            </section>
+
+            <!-- ================= HALAMAN 3: SIMULASI (TRADINGVIEW ASLI) ================= -->
+            <section id="page-simulasi" class="page-section">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                    
+                    <!-- Bagian Header Market Data -->
+                    <div class="flex justify-between items-end mb-6 border-b pb-4 flex-wrap gap-4">
+                        <div class="flex flex-col gap-3">
+                            <div class="flex items-center gap-3">
+                                <h3 class="text-xl font-bold text-gray-500" id="sim-title">Memuat...</h3>
+                                <!-- Dropdown Pemilihan Saham -->
+                                <select id="stock-selector" onchange="changeLiveStock(this.value)" class="bg-blue-50 border border-blue-200 text-brand text-sm rounded-lg focus:ring-brand focus:border-brand block p-2 font-bold cursor-pointer hover:bg-blue-100 transition shadow-sm outline-none">
+                                    <option value="BBCA">🏦 BBCA (Bank Central Asia)</option>
+                                    <option value="BBRI">🏦 BBRI (Bank Rakyat Indonesia)</option>
+                                    <option value="BMRI">🏦 BMRI (Bank Mandiri)</option>
+                                    <option value="TLKM">📡 TLKM (Telkom Indonesia)</option>
+                                    <option value="ASII">🚗 ASII (Astra International)</option>
+                                    <option value="GOTO">🛒 GOTO (GoTo Gojek Tokopedia)</option>
+                                    <option value="BREN">⚡ BREN (Barito Renewables)</option>
+                                </select>
+                            </div>
+                            <div class="flex items-baseline gap-3">
+                                <!-- Harga Live (Ditarik via API untuk hitungan transaksi) -->
+                                <span class="text-4xl font-black text-gray-800 transition-colors duration-300" id="sim-price">Rp 0</span>
+                                <span class="text-sm font-bold text-gray-500" id="sim-change">Harga Terkini</span>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm text-gray-500">Buying Power (Saldo Virtual)</p>
+                            <p class="text-3xl font-black text-brand transition-colors duration-300" id="sim-balance">Rp 100.000.000</p>
+                        </div>
+                    </div>
+                    
+                    <!-- WADAH WIDGET TRADINGVIEW ASLI -->
+                    <div class="w-full h-[450px] bg-gray-50 rounded-lg border border-gray-200 relative mb-4 overflow-hidden">
+                        <div id="tradingview_chart_widget" class="h-full w-full"></div>
+                    </div>
+                    
+                    <p class="text-xs text-gray-400 text-right"><i class="fa-solid fa-check-circle text-green-500"></i> Chart Provider by TradingView. Data harga mengikuti kondisi asli pasar (Real Data).</p>
+
+                    <!-- Tombol Action Eksekusi Market -->
+                    <div class="mt-6 flex gap-4">
+                        <button onclick="prosesTransaksiLive('beli')" class="flex-1 bg-accent text-white py-4 rounded-xl font-bold hover:bg-green-600 transition shadow-lg text-lg flex items-center justify-center gap-2 transform active:scale-95">
+                            <i class="fa-solid fa-cart-arrow-down"></i> <span id="btn-beli-text">BELI</span>
+                        </button>
+                        <button onclick="prosesTransaksiLive('jual')" class="flex-1 bg-red-500 text-white py-4 rounded-xl font-bold hover:bg-red-600 transition shadow-lg text-lg flex items-center justify-center gap-2 transform active:scale-95">
+                            <i class="fa-solid fa-sack-dollar"></i> <span id="btn-jual-text">JUAL</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= HALAMAN 4 & 5 & 6 (DIPERSINGKAT UNTUK DEMO) ================= -->
+            <section id="page-komunitas" class="page-section"><div class="bg-white p-8 rounded-xl shadow-sm border border-gray-100 text-center"><h2 class="text-2xl font-bold text-gray-500">Fitur Komunitas</h2><p class="text-gray-400">Tersedia pada saat MVP Launch.</p></div></section>
+            <section id="page-pencapaian" class="page-section"><div class="bg-white p-8 rounded-xl shadow-sm border border-gray-100 text-center"><h2 class="text-2xl font-bold text-gray-500">Pencapaian Gamifikasi</h2></div></section>
+            <section id="page-profil" class="page-section"><div class="bg-white p-8 rounded-xl shadow-sm border border-gray-100 text-center"><h2 class="text-2xl font-bold text-gray-500">Profil & e-KYC</h2></div></section>
+        </div>
+    </main>
+
+    <!-- LOGIKA TRADINGVIEW WIDGET & API REALTIME -->
+    <script>
+        // Navigasi
+        function navigateTo(targetPageId, headerTitle, clickedElement) {
+            document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active-page'));
+            document.getElementById(targetPageId).classList.add('active-page');
+            document.getElementById('header-title').innerText = headerTitle;
+
+            if (clickedElement && clickedElement.classList.contains('nav-btn')) {
+                document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('nav-active', 'bg-blue-800'));
+                clickedElement.classList.add('nav-active', 'bg-blue-800');
+            }
+
+            if(targetPageId === 'page-simulasi' && !isChartInitialized) {
+                changeLiveStock('BBCA');
+            }
+        }
+
+        // State Simulator
+        let currentStock = 'BBCA';
+        let currentLivePrice = 0; // Harga asli yang ditarik untuk kalkulasi transaksi
+        let virtualBalance = 100000000;
+        let isChartInitialized = false;
+        let fetchInterval = null;
+
+        // Inisialisasi TradingView & Data API
+        function changeLiveStock(symbol) {
+            currentStock = symbol;
+            isChartInitialized = true;
+            
+            // Ubah Teks UI
+            document.getElementById('sim-title').innerText = `${symbol}`;
+            document.getElementById('btn-beli-text').innerText = `BELI ${symbol} (1 Lot)`;
+            document.getElementById('btn-jual-text').innerText = `JUAL ${symbol} (1 Lot)`;
+            document.getElementById('sim-price').innerText = `Memuat harga asli...`;
+
+            // 1. Panggil Widget TradingView
+            new TradingView.widget({
+                "autosize": true,
+                "symbol": `IDX:${symbol}`, // Kode Bursa Efek Indonesia
+                "interval": "D",
+                "timezone": "Asia/Jakarta",
+                "theme": "light",
+                "style": "1", // Tipe Candlestick
+                "locale": "id",
+                "enable_publishing": false,
+                "backgroundColor": "#f9fafb",
+                "gridColor": "#e5e7eb",
+                "hide_top_toolbar": false,
+                "hide_legend": false,
+                "save_image": false,
+                "container_id": "tradingview_chart_widget"
+            });
+
+            // 2. Tarik Harga Murni dari API untuk fungsi tombol Transaksi
+            // (Karena TradingView widget adalah Iframe, harga angkanya harus kita tarik terpisah)
+            tarikHargaAsli(symbol);
+            
+            // Tarik ulang harga setiap 10 detik agar tetap up-to-date dengan pasar
+            if(fetchInterval) clearInterval(fetchInterval);
+            fetchInterval = setInterval(() => tarikHargaAsli(symbol), 10000);
+        }
+
+        // Fungsi Tarik Data Asli dari Yahoo Finance (Proxy)
+        async function tarikHargaAsli(symbol) {
+            // Timestamp agar tidak di-cache oleh browser/proxy
+            const noCache = Date.now();
+            const apiUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}.JK?region=ID&interval=1m&range=1d`;
+            const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(apiUrl)}&t=${noCache}`;
+
+            try {
+                const response = await fetch(proxyUrl);
+                const jsonResp = await response.json();
+                const yahooData = JSON.parse(jsonResp.contents);
+                
+                // Ambil harga penutupan terakhir (Live Price murni tanpa rekayasa)
+                const result = yahooData.chart.result[0];
+                currentLivePrice = result.meta.regularMarketPrice;
+                
+                // Update UI Harga 
+                const priceEl = document.getElementById('sim-price');
+                priceEl.innerText = 'Rp ' + currentLivePrice.toLocaleString('id-ID');
+
+            } catch (error) {
+                console.error("Gagal menarik data harga:", error);
+                document.getElementById('sim-price').innerText = `Koneksi API terganggu`;
+            }
+        }
+
+        // Eksekusi Transaksi Virtual
+        function prosesTransaksiLive(tipe) {
+            if (currentLivePrice === 0) {
+                alert('Tunggu sebentar, sedang menarik harga real-time dari bursa...');
+                return;
+            }
+
+            const lot = 100; // 1 Lot = 100 Lembar saham (Standar IHSG)
+            const totalBiaya = currentLivePrice * lot;
+
+            if(tipe === 'beli') {
+                if(virtualBalance >= totalBiaya) {
+                    virtualBalance -= totalBiaya;
+                    alert(`✅ TRANSAKSI BERHASIL (Data Asli)\n\nMembeli: 1 Lot ${currentStock}\nHarga Asli: Rp ${currentLivePrice.toLocaleString('id-ID')} / lembar\nTotal Potongan: Rp ${totalBiaya.toLocaleString('id-ID')}`);
+                } else {
+                    alert('❌ GAGAL: Saldo Virtual (Buying Power) Anda tidak mencukupi.');
+                }
+            } else {
+                virtualBalance += totalBiaya;
+                alert(`✅ TRANSAKSI BERHASIL (Data Asli)\n\nMenjual: 1 Lot ${currentStock}\nHarga Asli: Rp ${currentLivePrice.toLocaleString('id-ID')} / lembar\nDana Masuk: Rp ${totalBiaya.toLocaleString('id-ID')}`);
+            }
+
+            // Update & Beri Efek Kedip pada Saldo
+            const bEl = document.getElementById('sim-balance');
+            bEl.innerText = `Rp ${virtualBalance.toLocaleString('id-ID')}`;
+            bEl.classList.add(tipe === 'beli' ? 'text-red-500' : 'text-green-500');
+            setTimeout(() => bEl.classList.remove('text-red-500', 'text-green-500'), 600);
+        }
+    </script>
+
+    <!-- FIREBASE SDK & LOGIC -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyC9KcNZNUaupvchUQ0E8e9zesR1-cPRE7Q",
+          authDomain: "investing-academy.firebaseapp.com",
+          databaseURL: "https://investing-academy-default-rtdb.asia-southeast1.firebasedatabase.app",
+          projectId: "investing-academy",
+          storageBucket: "investing-academy.firebasestorage.app",
+          messagingSenderId: "462468220153",
+          appId: "1:462468220153:web:8fd94d3573cec0eb394e28"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const materiRef = ref(db, 'materi_belajar');
+
+        onValue(materiRef, (snapshot) => {
+            const container = document.getElementById('dynamic-lms-container');
+            if(!container) return;
+
+            const headerHtml = `<h3 class="font-bold text-gray-500 uppercase text-sm mb-4"><i class="fa-solid fa-cloud-arrow-down"></i> Materi Baru dari Admin (Realtime Firebase)</h3>`;
+
+            if (!snapshot.exists()) {
+                container.innerHTML = headerHtml + `<p class="text-sm text-gray-400">Belum ada materi baru yang diupload.</p>`;
+                return;
+            }
+
+            let htmlKonten = headerHtml + `<div class="space-y-4">`;
+            const data = snapshot.val();
+
+            Object.keys(data).reverse().forEach(key => {
+                const item = data[key];
+                const icon = item.tipe === 'video' ? '<i class="fa-solid fa-video"></i>' : '<i class="fa-solid fa-file-pdf"></i>';
+                const bg = item.tipe === 'video' ? 'bg-red-50 border-red-200' : 'bg-indigo-50 border-indigo-200';
+                const btn = item.tipe === 'video' ? 'bg-red-500 hover:bg-red-600' : 'bg-indigo-500 hover:bg-indigo-600';
+                
+                htmlKonten += `
+                <div class="p-5 border ${bg} rounded-lg flex justify-between items-center transition hover:shadow-md">
+                    <div>
+                        <span class="text-xs font-bold text-gray-700 bg-white border px-2 py-1 rounded shadow-sm">
+                            ${icon} ${item.tipe.toUpperCase()} • Level: ${item.level}
+                        </span>
+                        <h4 class="font-bold text-lg mt-2 text-gray-800">${item.judul}</h4>
+                        <p class="text-sm text-gray-600">${item.deskripsi}</p>
+                    </div>
+                    <button onclick="alert('Membuka materi: ${item.judul}')" class="px-4 py-2 ${btn} text-white rounded-lg font-bold shadow-md transition">Buka Materi</button>
+                </div>`;
+            });
+            htmlKonten += `</div>`;
+            container.innerHTML = htmlKonten;
+        });
+    </script>
+</body>
+</html>
